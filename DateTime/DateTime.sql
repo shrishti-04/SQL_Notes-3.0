@@ -46,3 +46,31 @@ SELECT OrderID,
 CreationTime,
 'Day ' + FORMAT(CreationTime, 'ddd MMM') + ' Q' + DATENAME(QUARTER, CreationTime) + ' ' + FORMAT(CreationTime, 'yyyy hh:mm:ss tt') FormatGiven
 FROM Sales.Orders
+
+-- How many orders were placed each month along with its year?
+
+SELECT FORMAT(OrderDate, 'MMM yy') AS OrderDate,
+COUNT(*)
+FROM Sales.Orders
+GROUP BY FORMAT(OrderDate, 'MMM yy');
+
+-- Find the age of employee
+
+SELECT EmployeeID, 
+CONCAT(FirstName, ' ', LastName) AS EmployeeName,
+DATEDIFF(YEAR, BirthDate, GETDATE()) AS AGE FROM Sales.Employees;
+
+-- Find the average shipping duration in each days for each month.
+
+SELECT MONTH(OrderDate) AS MonthS,
+AVG(DATEDIFF(DAY, OrderDate, ShipDate)) AS Duration FROM sales.Orders
+GROUP BY MONTH(OrderDate)
+
+-- Time Gap Analysis
+-- Find the number of days between each order and the previous order.
+
+SELECT OrderID,
+OrderDate AS CurrentDate,
+LAG(OrderDate) OVER (ORDER BY OrderDate) AS PreviousDate,
+DATEDIFF(DAY, LAG(OrderDate) OVER (ORDER BY OrderDate), OrderDate) AS CurrentPreviousDuration
+FROM Sales.Orders
