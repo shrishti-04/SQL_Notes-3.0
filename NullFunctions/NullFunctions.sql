@@ -34,3 +34,17 @@ SELECT CustomerID, Score,
 CASE WHEN Score IS NULL THEN 1 ELSE 0 END AS Flag
 FROM Sales.Customers
 ORDER BY CASE WHEN Score IS NULL THEN 1 ELSE 0 END, Score DESC;
+
+-- NULLIF USECASE
+
+-- Find the sales price for each order by dividing sales by quantity
+
+-- This will give error as one of the quantity is 0 and it is dividing by 0
+
+SELECT OrderID, Sales, Quantity,
+Sales / Quantity AS Price
+FROM Sales.Orders
+
+SELECT OrderID, Sales, Quantity,
+Sales / NULLIF(Quantity, 0) AS Price
+FROM Sales.Orders
