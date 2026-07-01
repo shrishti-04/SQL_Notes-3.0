@@ -33,7 +33,7 @@ FROM Sales.Customers
 SELECT CustomerID, Score,
 CASE WHEN Score IS NULL THEN 1 ELSE 0 END AS Flag
 FROM Sales.Customers
-ORDER BY CASE WHEN Score IS NULL THEN 1 ELSE 0 END, Score DESC;
+ORDER BY CASE WHEN Score IS NULL THEN 1 ELSE 0 END ASC, Score DESC;
 
 -- NULLIF USECASE
 
@@ -45,6 +45,28 @@ SELECT OrderID, Sales, Quantity,
 Sales / Quantity AS Price
 FROM Sales.Orders
 
+-- if quantity = 0 then it will throw NULL as result
+-- that's how NULLIF works
+
 SELECT OrderID, Sales, Quantity,
 Sales / NULLIF(Quantity, 0) AS Price
 FROM Sales.Orders
+
+-- Identify the customers who have no scores
+
+SELECT * FROM Sales.Customers
+WHERE Score IS NULL;
+
+-- Show the list of Customers who have scores
+
+SELECT * FROM Sales.Customers
+WHERE Score IS NOT NULL;
+
+-- List all details of Customers who haven't place any order
+
+SELECT * FROM Sales.Customers
+SELECT * FROM Sales.Orders
+
+SELECT C.*, OrderID FROM Sales.Customers C
+LEFT JOIN Sales.Orders O ON C.CustomerID = O.CustomerID
+WHERE O.CustomerID IS NULL;
