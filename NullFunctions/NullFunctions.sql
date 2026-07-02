@@ -70,3 +70,19 @@ SELECT * FROM Sales.Orders
 SELECT C.*, OrderID FROM Sales.Customers C
 LEFT JOIN Sales.Orders O ON C.CustomerID = O.CustomerID
 WHERE O.CustomerID IS NULL;
+
+-- NULL VS Blank String VS Space String blank
+
+WITH Orders AS (SELECT 1 ID, 'A' AS Category 
+UNION
+SELECT 2, NULL
+UNION
+SELECT 3, ''
+UNION
+SELECT 4, ' ')
+SELECT *, 
+DATALENGTH(Category) AS Category_len,
+NULLIF(CATEGORY, TRIM(Category)) AS Category2,
+DATALENGTH(TRIM(Category)) AS Category_len2,
+COALESCE(NULLIF(TRIM(Category), ''), 'unknown') AS Category3
+FROM Orders
