@@ -18,9 +18,7 @@ FROM Sales.Orders;
 
 SELECT OrderID, OrderDate, ProductID, OrderStatus, Sales,
 SUM(Sales) OVER() TotalSales,
-SUM(Sales) OVER(PARTITION BY ProductID, OrderStatus) ProductNOrderStatusTotalSales,
-SUM(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate
-ROWS UNBOUNDED PRECEDING) ProductTotalSales
+SUM(Sales) OVER(PARTITION BY ProductID, OrderStatus) AS ProductStatus
 FROM Sales.Orders
 
 -- RANK Customer based on their total sales
@@ -30,3 +28,13 @@ SUM(Sales) TotalSales,
 RANK() OVER(ORDER BY SUM(Sales) DESC) RankCustomers
 FROM Sales.Orders
 GROUP BY CustomerID;
+
+-- Find the total sales of each product
+-- Find the total sales across all orders
+-- Additionally provide details such as Order Id, Order date
+
+SELECT ProductID, OrderId, OrderDate, OrderStatus,
+SUM(Sales) OVER () TotalSales,
+SUM(Sales) OVER (PARTITION BY ProductId) ProductSales,
+SUM(Sales) OVER (PARTITION BY ProductId, OrderStatus) ProductOrderStatusSales 
+FROM Sales.Orders
